@@ -8,8 +8,7 @@ def mostrar_desglose_categorias(total, categorias):
     print("\nDesglose por categoría:")
     if categorias:
         for cat, monto in sorted(categorias.items()):
-            porcentaje = (monto / total * 100) if total > 0 else 0
-            print(f"  • {cat.capitalize()}: ${monto:.2f} ({porcentaje:.1f}%)")
+            print(f"  • {cat.capitalize()}: ${monto:.2f}")
     else:
         print("  No hay gastos registrados en este período.")
 

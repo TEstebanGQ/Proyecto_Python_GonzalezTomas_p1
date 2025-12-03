@@ -6,12 +6,13 @@ from ui.menuSystem import mostrar_confirmacion
 
 
 def seleccionar_categoria():
-    """Permite al usuario seleccionar o crear una categoría"""
+    limpiarPantalla()
     categorias_existentes = obtener_categorias_usadas()
     
     print("\n--- Seleccionar Categoría ---")
     
     if categorias_existentes:
+
         print("\nCategorías disponibles:")
         for i, cat in enumerate(categorias_existentes, 1):
             print(f"  {i}. {cat.capitalize()}")
@@ -22,12 +23,10 @@ def seleccionar_categoria():
             
             try:
                 opcion_num = int(opcion)
-                
-                # Validar si seleccionó una categoría existente
+        
                 if 1 <= opcion_num <= len(categorias_existentes):
                     return categorias_existentes[opcion_num - 1]
                 
-                # Si seleccionó crear nueva categoría
                 elif opcion_num == len(categorias_existentes) + 1:
                     nueva_cat = input("\nIngrese el nombre de la nueva categoría: ").strip().lower()
                     if nueva_cat:
@@ -36,11 +35,12 @@ def seleccionar_categoria():
                         print("El nombre de la categoría no puede estar vacío.")
                 else:
                     print("Opción inválida. Intente de nuevo.")
+                    return
             
             except ValueError:
                 print("Por favor ingrese un número válido.")
     else:
-        # Si no hay categorías, pedir directamente una nueva
+        limpiarPantalla()
         print("\nNo hay categorías registradas aún.")
         nueva_cat = input("Ingrese el nombre de la nueva categoría: ").strip().lower()
         if nueva_cat:
@@ -59,10 +59,8 @@ Ingrese la información del gasto:
 """)
     
     try:
-        # Solicitar monto
         monto_str = input("- Monto del gasto: $").strip()
         
-        # Seleccionar o crear categoría
         categoria_str = seleccionar_categoria()
         
         if not categoria_str:
@@ -71,15 +69,12 @@ Ingrese la información del gasto:
             print("="*45)
             pausarPantalla()
             return
-        
-        # Solicitar descripción
+ 
         descripcion = input("\n- Descripción (opcional): ").strip()
-        # Confirmar o cancelar
         if mostrar_confirmacion("¿Desea guardar este gasto?"):
-            # Registrar el gasto
             gasto = registrar_gasto(monto_str, categoria_str, descripcion)
             
-            print("\n" + "="*45)
+            print("\n" + "-"*45)
             print_success("¡Gasto registrado exitosamente!")
             print(f"  ID: {gasto['id']}")
             print(f"  Monto: ${gasto['monto']:.2f}")
@@ -87,7 +82,7 @@ Ingrese la información del gasto:
             print(f"  Fecha: {gasto['fecha']}")
             if gasto['descripcion']:
                 print(f"  Descripción: {gasto['descripcion']}")
-            print("="*45)
+            print("-"*45)
         else:
             print("\nRegistro cancelado.")
             

@@ -4,7 +4,6 @@ from difflib import get_close_matches
 from data.storage import load_data
 
 
-# Constantes
 PATRON_CATEGORIA = r'^[a-záéíóúñ0-9\s]+$'
 SIMILITUD_MINIMA = 0.7
 MAX_SUGERENCIAS = 1

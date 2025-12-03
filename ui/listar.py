@@ -15,9 +15,8 @@ def vista_listar_todos():
     if not gastos:
         print("No hay gastos registrados aún.")
     else:
-        print(f"Total de gastos registrados: {len(gastos)}\n")
         mostrar_tabla_gastos(gastos)
-        
+    
     pausarPantalla()
 
 
@@ -98,9 +97,7 @@ def vista_listar_por_fechas():
             
     except ValueError:
         print_error("Formato de fecha inválido. Use YYYY-MM-DD")
-        
     pausarPantalla()
-
 
 def menu_listar_gastos():
     """Menú principal para listar gastos"""

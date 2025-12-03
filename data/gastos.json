@@ -5,5 +5,19 @@
     "monto": 50000.0,
     "categoria": "entretenimiento",
     "descripcion": "gasto del cine"
+  },
+  {
+    "id": "5948ec57-a405-4392-ac99-e7e12fa51d11",
+    "fecha": "2025-12-03T06:57:48.445573",
+    "monto": 2000.0,
+    "categoria": "comida",
+    "descripcion": "se compra pollo"
+  },
+  {
+    "id": "791abe8e-aadf-467f-8af1-e31310740ce8",
+    "fecha": "2025-12-03T07:04:21.850597",
+    "monto": 900000.0,
+    "categoria": "estudio",
+    "descripcion": "pago campus"
   }
 ]

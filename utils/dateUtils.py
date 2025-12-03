@@ -4,12 +4,11 @@ from datetime import datetime, timedelta
 def ahora_iso():
     return datetime.now().isoformat()
 
-
 def iso_a_fecha(iso):
     try:
         return datetime.fromisoformat(iso)
-    except Exception:
-        return datetime.now()
+    except ValueError:
+        raise ValueError(f"Formato ISO inválido: {iso}")
 
 
 def fecha_hoy():

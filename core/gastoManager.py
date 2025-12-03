@@ -1,3 +1,4 @@
+import uuid
 from data.storage import load_data, save_data
 from utils.dateUtils import ahora_iso
 from core.validators import validar_monto, corregir_categoria
@@ -23,11 +24,8 @@ def registrar_gasto(monto_str, categoria_str, descripcion=''):
     save_data(data)
     return gasto
 
-
 def generar_id():
-    # Simple id incremental basado en timestamp
-    import time
-    return int(time.time() * 1000)
+    return str(uuid.uuid4())
 
 
 def listar_gastos(filtro=None):

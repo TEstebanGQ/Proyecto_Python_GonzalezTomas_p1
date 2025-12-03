@@ -2,6 +2,7 @@ from datetime import datetime
 from utils.screenControllers import limpiarPantalla, pausarPantalla
 from utils.formatting import mostrar_tabla_gastos, print_error
 from core.gastoManager import listar_gastos
+from core.validators import obtener_categorias_usadas
 from ui.menuSystem import Menu
 
 
@@ -24,34 +25,41 @@ def vista_listar_por_categoria():
     """Vista para filtrar gastos por categoría"""
     limpiarPantalla()
     print("=== Filtrar por Categoría ===\n")
+    
+    # Obtener categorías dinámicamente
+    categorias = obtener_categorias_usadas()
+    
+    if not categorias:
+        print("No hay categorías registradas aún.")
+        pausarPantalla()
+        return
+    
     print("Categorías disponibles:")
-    print("1. Comida")
-    print("2. Transporte")
-    print("3. Entretenimiento")
-    print("4. Otros\n")
+    for i, cat in enumerate(categorias, 1):
+        print(f"{i}. {cat.capitalize()}")
     
+    print()
     cat_opcion = input("Seleccione una categoría: ").strip()
-    categorias_map = {
-        "1": "comida",
-        "2": "transporte",
-        "3": "entretenimiento",
-        "4": "otros"
-    }
     
-    if cat_opcion in categorias_map:
-        categoria_filtro = categorias_map[cat_opcion]
-        gastos = listar_gastos(lambda g: g['categoria'] == categoria_filtro)
+    try:
+        opcion_num = int(cat_opcion)
         
-        limpiarPantalla()
-        print(f"=== Gastos en categoría: {categoria_filtro.upper()} ===\n")
-        
-        if not gastos:
-            print(f"No hay gastos en la categoría '{categoria_filtro}'.")
+        if 1 <= opcion_num <= len(categorias):
+            categoria_filtro = categorias[opcion_num - 1]
+            gastos = listar_gastos(lambda g: g['categoria'] == categoria_filtro)
+            
+            limpiarPantalla()
+            print(f"=== Gastos en categoría: {categoria_filtro.upper()} ===\n")
+            
+            if not gastos:
+                print(f"No hay gastos en la categoría '{categoria_filtro}'.")
+            else:
+                print(f"Total de gastos encontrados: {len(gastos)}\n")
+                mostrar_tabla_gastos(gastos)
         else:
-            print(f"Total de gastos encontrados: {len(gastos)}\n")
-            mostrar_tabla_gastos(gastos)
-    else:
-        print("Opción inválida.")
+            print("Opción inválida.")
+    except ValueError:
+        print("Por favor ingrese un número válido.")
         
     pausarPantalla()
 

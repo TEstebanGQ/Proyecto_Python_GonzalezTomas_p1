@@ -1,7 +1,15 @@
 import re
 from difflib import get_close_matches
+from data.storage import load_data
 
-CATEGORIAS = ['comida', 'transporte', 'entretenimiento', 'otros']
+def obtener_categorias_usadas():
+    """Obtiene todas las categorías únicas que han sido usadas"""
+    gastos = load_data()
+    categorias = set()
+    for gasto in gastos:
+        if 'categoria' in gasto and gasto['categoria']:
+            categorias.add(gasto['categoria'].lower().strip())
+    return sorted(list(categorias))
 
 
 def validar_monto(text):
@@ -22,13 +30,35 @@ def validar_monto(text):
 
 
 def corregir_categoria(cat):
+    """Valida y corrige la categoría ingresada"""
     if not isinstance(cat, str):
         return None
+    
     c = cat.lower().strip()
-    if c in CATEGORIAS:
+    
+    if not c:
+        return None
+    
+    # Validar que solo contenga letras, números y espacios
+    if not re.match(r'^[a-záéíóúñ0-9\s]+$', c, re.IGNORECASE):
+        return None
+    
+    # Obtener categorías existentes
+    categorias_existentes = obtener_categorias_usadas()
+    
+    # Si la categoría ya existe, retornarla
+    if c in categorias_existentes:
         return c
-    sugerencias = get_close_matches(c, CATEGORIAS, n=1, cutoff=0.5)
-    return sugerencias[0] if sugerencias else None
+    
+    # Buscar sugerencias similares
+    sugerencias = get_close_matches(c, categorias_existentes, n=1, cutoff=0.7)
+    
+    if sugerencias:
+        # Si hay una sugerencia muy similar, usar la existente
+        return sugerencias[0]
+    
+    # Si no hay coincidencias, es una categoría nueva válida
+    return c
 
 
 def validar_fecha_iso(fecha_str):

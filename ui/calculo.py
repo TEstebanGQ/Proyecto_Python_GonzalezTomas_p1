@@ -14,69 +14,31 @@ def mostrar_desglose_categorias(total, categorias):
     else:
         print("  No hay gastos registrados en este período.")
 
+def vista_total_generico(tipo, funcion_total, titulo, mensaje):
+    limpiarPantalla()
+    print(f"""
+=============================================
+              {titulo}
+=============================================
+""")
+    try:
+        total = funcion_total()
+        print(f"{mensaje}: ${total:.2f}\n")
+        categorias = totales_por_categoria()  # Nota: Aquí hay otra optimización posible, pasar filtro de período
+        mostrar_desglose_categorias(total, categorias)
+        print("="*45)
+    except Exception as e:
+        print_error(f"Error al calcular {tipo}: {str(e)}")
+    pausarPantalla()
 
 def vista_total_diario():
-    """Vista para mostrar el total diario"""
-    limpiarPantalla()
-    print("""
-=============================================
-              Total Diario
-=============================================
-""")
-    try:
-        total = total_diario()
-        print(f"Total gastado hoy: ${total:.2f}\n")
-        
-        categorias = totales_por_categoria()
-        mostrar_desglose_categorias(total, categorias)
-        print("="*45)
-    except Exception as e:
-        print_error(f"Error al calcular total diario: {str(e)}")
-    
-    pausarPantalla()
-
+    vista_total_generico('diario', total_diario, 'Total Diario', 'Total gastado hoy')
 
 def vista_total_semanal():
-    """Vista para mostrar el total semanal"""
-    limpiarPantalla()
-    print("""
-=============================================
-              Total Semanal
-=============================================
-""")
-    try:
-        total = total_semanal()
-        print(f"Total gastado en los últimos 7 días: ${total:.2f}\n")
-        
-        categorias = totales_por_categoria()
-        mostrar_desglose_categorias(total, categorias)
-        print("="*45)
-    except Exception as e:
-        print_error(f"Error al calcular total semanal: {str(e)}")
-    
-    pausarPantalla()
-
+    vista_total_generico('semanal', total_semanal, 'Total Semanal', 'Total gastado en los últimos 7 días')
 
 def vista_total_mensual():
-    """Vista para mostrar el total mensual"""
-    limpiarPantalla()
-    print("""
-=============================================
-              Total Mensual
-=============================================
-""")
-    try:
-        total = total_mensual()
-        print(f"Total gastado este mes: ${total:.2f}\n")
-        
-        categorias = totales_por_categoria()
-        mostrar_desglose_categorias(total, categorias)
-        print("="*45)
-    except Exception as e:
-        print_error(f"Error al calcular total mensual: {str(e)}")
-    
-    pausarPantalla()
-
+    vista_total_generico('mensual', total_mensual, 'Total Mensual', 'Total gastado este mes')
 
 def menu_calculos():
     """Menú principal para calcular totales"""

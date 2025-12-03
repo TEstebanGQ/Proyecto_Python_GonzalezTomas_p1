@@ -5,7 +5,6 @@ _data_cache = None
 DATA_FILE = Path('data/gastos.json')
 REPORTS_DIR = Path('data/reports')
 
-
 def ensure_data_file():
     DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
     if not DATA_FILE.exists():

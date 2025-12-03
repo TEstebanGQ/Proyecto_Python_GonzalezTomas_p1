@@ -1,5 +1,5 @@
 from ui.menus import menu_principal
-from data.storage import ensure_data_file
+from utils.storage import ensure_data_file
 from utils.screenControllers import limpiarPantalla
 
 def main():

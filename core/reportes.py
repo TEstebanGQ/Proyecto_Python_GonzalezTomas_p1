@@ -4,7 +4,7 @@ from core.calculos import (
     es_gasto_ultima_semana,
     es_gasto_mes_actual
 )
-from data.storage import save_report
+from utils.storage import save_report
 
 
 def generar_reporte(tipo, filtro_func):

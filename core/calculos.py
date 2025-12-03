@@ -1,4 +1,4 @@
-from data.storage import load_data
+from utils.storage import load_data
 from utils.dateUtils import iso_a_fecha, fecha_hoy, hace_dias
 from datetime import datetime
 

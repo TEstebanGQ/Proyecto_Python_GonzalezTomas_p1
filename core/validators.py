@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 from difflib import get_close_matches
-from data.storage import load_data
+from utils.storage import load_data
 
 
 PATRON_CATEGORIA = r'^[a-záéíóúñ0-9\s]+$'
@@ -122,8 +122,7 @@ def validar_rango_fechas(fecha_inicio_str, fecha_fin_str):
     try:
         fecha_inicio = datetime.fromisoformat(fecha_inicio_str)
         fecha_fin = datetime.fromisoformat(fecha_fin_str)
-        
-        # Validar que la fecha de inicio sea anterior a la de fin
+
         if fecha_inicio > fecha_fin:
             return None, None
         

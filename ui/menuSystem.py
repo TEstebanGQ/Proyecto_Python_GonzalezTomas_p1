@@ -5,15 +5,6 @@ class Menu:
     """Sistema de menú reutilizable"""
     
     def __init__(self, titulo, opciones):
-        """
-        titulo: str - Título del menú
-        opciones: list[dict] - Lista de opciones con formato:
-            [
-                {'texto': 'Opción 1', 'accion': funcion1},
-                {'texto': 'Opción 2', 'accion': funcion2},
-                ...
-            ]
-        """
         self.titulo = titulo
         self.opciones = opciones
     
@@ -56,10 +47,6 @@ class Menu:
 
 
 def mostrar_confirmacion(mensaje):
-    """
-    Muestra un mensaje de confirmación S/N
-    Retorna True si el usuario confirma, False en caso contrario
-    """
     while True:
         respuesta = input(f"\n{mensaje} (S/N): ").strip().upper()
         if respuesta == 'S':
@@ -71,12 +58,6 @@ def mostrar_confirmacion(mensaje):
 
 
 def mostrar_resultado(titulo, contenido, es_error=False):
-    """
-    Muestra un resultado formateado
-    titulo: str - Título del resultado
-    contenido: str o dict - Contenido a mostrar
-    es_error: bool - Si es un mensaje de error
-    """
     limpiarPantalla()
     separador = "=" * 45
     

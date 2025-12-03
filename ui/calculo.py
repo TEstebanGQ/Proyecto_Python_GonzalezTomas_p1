@@ -1,20 +1,20 @@
 from utils.screenControllers import limpiarPantalla, pausarPantalla
 from utils.formatting import print_error
-from core.calculos import total_diario, total_semanal, total_mensual, totales_por_categoria
+from core.calculos import ( obtener_estadisticas_periodo, es_gasto_hoy, es_gasto_ultima_semana, es_gasto_mes_actual)
 from ui.menuSystem import Menu
 
 
 def mostrar_desglose_categorias(total, categorias):
-    """Muestra el desglose por categoría con porcentajes"""
-    print("Desglose por categoría:")
+    print("\nDesglose por categoría:")
     if categorias:
-        for cat, monto in categorias.items():
+        for cat, monto in sorted(categorias.items()):
             porcentaje = (monto / total * 100) if total > 0 else 0
             print(f"  • {cat.capitalize()}: ${monto:.2f} ({porcentaje:.1f}%)")
     else:
         print("  No hay gastos registrados en este período.")
 
-def vista_total_generico(tipo, funcion_total, titulo, mensaje):
+
+def vista_estadisticas_periodo(titulo, mensaje, filtro_func):
     limpiarPantalla()
     print(f"""
 =============================================
@@ -22,26 +22,42 @@ def vista_total_generico(tipo, funcion_total, titulo, mensaje):
 =============================================
 """)
     try:
-        total = funcion_total()
-        print(f"{mensaje}: ${total:.2f}\n")
-        categorias = totales_por_categoria()  # Nota: Aquí hay otra optimización posible, pasar filtro de período
-        mostrar_desglose_categorias(total, categorias)
-        print("="*45)
+        estadisticas = obtener_estadisticas_periodo(filtro_func)
+        
+        print(f"{mensaje}: ${estadisticas['total']:.2f}")
+        print(f"Cantidad de gastos: {estadisticas['cantidad_gastos']}")
+        
+        mostrar_desglose_categorias(
+            estadisticas['total'], 
+            estadisticas['por_categoria']
+        )
+        
+        print("=" * 45)
     except Exception as e:
-        print_error(f"Error al calcular {tipo}: {str(e)}")
+        print_error(f"Error al calcular estadísticas: {str(e)}")
+    
     pausarPantalla()
 
+
 def vista_total_diario():
-    vista_total_generico('diario', total_diario, 'Total Diario', 'Total gastado hoy')
+    vista_estadisticas_periodo(
+        'Total Diario',
+        'Total gastado hoy',
+        es_gasto_hoy )
 
 def vista_total_semanal():
-    vista_total_generico('semanal', total_semanal, 'Total Semanal', 'Total gastado en los últimos 7 días')
+    vista_estadisticas_periodo(
+        'Total Semanal',
+        'Total gastado en los últimos 7 días',
+        es_gasto_ultima_semana )
 
 def vista_total_mensual():
-    vista_total_generico('mensual', total_mensual, 'Total Mensual', 'Total gastado este mes')
+    vista_estadisticas_periodo(
+        'Total Mensual',
+        'Total gastado este mes',
+        es_gasto_mes_actual )
 
 def menu_calculos():
-    """Menú principal para calcular totales"""
     opciones = [
         {'texto': 'Calcular total diario', 'accion': vista_total_diario},
         {'texto': 'Calcular total semanal', 'accion': vista_total_semanal},

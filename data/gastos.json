@@ -1,37 +1,9 @@
 [
   {
-    "id": 1764679730271,
-    "fecha": "2025-12-02T07:48:50.272000",
-    "monto": 3000.0,
-    "categoria": "comida",
-    "descripcion": ""
-  },
-  {
-    "id": 1764679755208,
-    "fecha": "2025-12-02T07:49:15.208438",
-    "monto": 300.0,
-    "categoria": "otros",
-    "descripcion": "opcional"
-  },
-  {
-    "id": 1764680199439,
-    "fecha": "2025-12-02T07:56:39.439341",
-    "monto": 30000.0,
-    "categoria": "transporte",
-    "descripcion": "se paga bus mensual"
-  },
-  {
-    "id": 1764721271619,
-    "fecha": "2025-12-02T19:21:11.619157",
-    "monto": 600.0,
-    "categoria": "comida",
-    "descripcion": ""
-  },
-  {
-    "id": 1764723205538,
-    "fecha": "2025-12-02T19:53:25.538309",
-    "monto": 8000.0,
-    "categoria": "comida",
-    "descripcion": "pago hamburguesa"
+    "id": "94519491-29b0-499e-a8a6-e46d37d4c43f",
+    "fecha": "2025-12-02T22:26:58.984790",
+    "monto": 50000.0,
+    "categoria": "entretenimiento",
+    "descripcion": "gasto del cine"
   }
 ]

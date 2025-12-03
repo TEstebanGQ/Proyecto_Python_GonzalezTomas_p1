@@ -74,16 +74,6 @@ Ingrese la información del gasto:
         
         # Solicitar descripción
         descripcion = input("\n- Descripción (opcional): ").strip()
-        
-        # Mostrar resumen
-        print("\n" + "="*45)
-        print("Resumen del gasto:")
-        print(f"  Monto: ${monto_str}")
-        print(f"  Categoría: {categoria_str.capitalize()}")
-        if descripcion:
-            print(f"  Descripción: {descripcion}")
-        print("="*45)
-        
         # Confirmar o cancelar
         if mostrar_confirmacion("¿Desea guardar este gasto?"):
             # Registrar el gasto

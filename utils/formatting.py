@@ -81,13 +81,13 @@ def print_key_values(diccionario):
         print(f"- {clave}: {valor}")
 
 def print_success(mensaje):
-    print(f"✓ [OK] {mensaje}")
+    print(f" [OK] {mensaje}")
 
 def print_error(mensaje):
-    print(f"✗ [ERROR] {mensaje}")
+    print(f" [ERROR] {mensaje}")
 
 def print_warning(mensaje):
-    print(f"⚠ [ADVERTENCIA] {mensaje}")
+    print(f" [ADVERTENCIA] {mensaje}")
 
 def print_info(mensaje):
     print(f" [INFO] {mensaje}")

@@ -1,0 +1,10 @@
+{
+  "tipo": "semanal",
+  "total": 952000.0,
+  "por_categoria": {
+    "entretenimiento": 50000.0,
+    "comida": 2000.0,
+    "estudio": 900000.0
+  },
+  "cantidad_gastos": 3
+}

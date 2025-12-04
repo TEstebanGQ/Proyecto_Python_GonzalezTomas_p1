@@ -3,19 +3,12 @@ import sys
 
 def pausarPantalla():
     try:
-        if sys.platform.startswith('linux') or sys.platform == 'darwin':
-            input('\nPresiona Enter para continuar .....')
-        else:
-            os.system('pause')
-    except Exception:
-        pass
-
+        input('Presione ENTER para continuar...')
+    except KeyboardInterrupt:
+        print("\nOperación cancelada.")
 
 def limpiarPantalla():
-    try:
-        if sys.platform.startswith('linux') or sys.platform == 'darwin':
-            os.system('clear')
-        else:
-            os.system('cls')
-    except Exception:
-        pass
+    if sys.platform.startswith("win"):
+        os.system("cls")
+    else:
+        os.system("clear")

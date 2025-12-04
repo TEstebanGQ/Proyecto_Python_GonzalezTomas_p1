@@ -1,26 +1,41 @@
-from ui.menuSystem import Menu, mostrar_confirmacion
-from ui.gasto import vista_registro_gasto
-from ui.listar import menu_listar_gastos
-from ui.calculo import menu_calculos
-from ui.reporte import menu_reportes
+from ui.prompts import inputSeguro, confirmarAccion
+from utils.screenControllers import limpiarPantalla, pausarPantalla
+from core.gastoManager import registrarGasto
+from ui.listado import listarGastosMenu
+from ui.calculos import calcularTotalesMenu
+from ui.reporte import generarReporteMenu
 
+def menuPrincipal():
+    while True:
+        limpiarPantalla()
+        print("""
+=============================================
+        Simulador de Gasto Diario
+=============================================
+Seleccione una opción:
 
-def confirmar_salida():
-    """Confirma si el usuario desea salir del programa"""
-    if mostrar_confirmacion("¿Desea salir del programa?"):
-        print("Saliendo del programa...")
-        exit()
+1. Registrar nuevo gasto
+2. Listar gastos
+3. Calcular total de gastos
+4. Generar reporte de gastos
+5. Salir
+=============================================
+""")
 
+        opcion = inputSeguro("Seleccione una opción: ")
 
-def menu_principal():
-    """Menú principal de la aplicación"""
-    opciones = [
-        {'texto': 'Registrar nuevo gasto', 'accion': vista_registro_gasto},
-        {'texto': 'Listar gastos', 'accion': menu_listar_gastos},
-        {'texto': 'Calcular total de gastos', 'accion': menu_calculos},
-        {'texto': 'Generar reporte de gastos', 'accion': menu_reportes},
-        {'texto': 'Salir', 'accion': confirmar_salida}
-    ]
-    
-    menu = Menu("Simulador de Gasto Diario", opciones)
-    menu.mostrar()
+        if opcion == "1":
+            registrarGasto()
+        elif opcion == "2":
+            listarGastosMenu()
+        elif opcion == "3":
+            calcularTotalesMenu()
+        elif opcion == "4":
+            generarReporteMenu()
+        elif opcion == "5":
+            if confirmarAccion("¿Desea salir del programa? (S/N): "):
+                print("\nGracias por usar el Simulador de Gasto Diario.")
+                break
+        else:
+            print("Opción inválida.")
+            pausarPantalla()

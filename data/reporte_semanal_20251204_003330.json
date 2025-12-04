@@ -1,0 +1,18 @@
+{
+    "periodo": "Semanal",
+    "fecha_inicio": "2025-11-27",
+    "fecha_fin": "2025-12-04",
+    "gastos": [
+        {
+            "id": "00003",
+            "fecha": "2025-12-01",
+            "categoria": "entretenimiento",
+            "cantidad": 85000.0,
+            "descripcion": "cine"
+        }
+    ],
+    "total": 85000.0,
+    "por_categoria": {
+        "entretenimiento": 85000.0
+    }
+}

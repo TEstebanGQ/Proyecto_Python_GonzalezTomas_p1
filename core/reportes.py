@@ -1,51 +1,77 @@
-from core.calculos import (
-    obtener_estadisticas_periodo,
-    es_gasto_hoy,
-    es_gasto_ultima_semana,
-    es_gasto_mes_actual
-)
-from utils.storage import save_report
+from datetime import datetime, timedelta
+from collections import defaultdict
 
+def totalDiario(gastos):
+    hoy = datetime.now().strftime("%Y-%m-%d")
+    return sum(g["cantidad"] for g in gastos if g["fecha"] == hoy)
 
-def generar_reporte(tipo, filtro_func):
-    estadisticas = obtener_estadisticas_periodo(filtro_func)
+def totalSemanal(gastos):
+    hoy = datetime.now()
+    hace7 = (hoy - timedelta(days=7)).replace(hour=0, minute=0, second=0, microsecond=0)
+    return sum(
+        g["cantidad"]
+        for g in gastos
+        if hace7 <= datetime.strptime(g["fecha"], "%Y-%m-%d") <= hoy
+    )
+
+def totalMensual(gastos):
+    hoy = datetime.now()
+    return sum(
+        g["cantidad"]
+        for g in gastos
+        if datetime.strptime(g["fecha"], "%Y-%m-%d").month == hoy.month
+        and datetime.strptime(g["fecha"], "%Y-%m-%d").year == hoy.year
+    )
+
+def generarReporteDiario(gastos):
+    hoy = datetime.now().strftime("%Y-%m-%d")
+    gastos_hoy = [g for g in gastos if g["fecha"] == hoy]
     
     return {
-        'tipo': tipo,
-        'total': estadisticas['total'],
-        'por_categoria': estadisticas['por_categoria'],
-        'cantidad_gastos': estadisticas['cantidad_gastos']
+        "periodo": "Diario",
+        "fecha": hoy,
+        "gastos": gastos_hoy,
+        "total": totalDiario(gastos),
+        "por_categoria": agruparPorCategoria(gastos_hoy)
     }
 
-
-def reporte_diario():
-    return generar_reporte('diario', es_gasto_hoy)
-
-
-def reporte_semanal():
-    return generar_reporte('semanal', es_gasto_ultima_semana)
-
-
-def reporte_mensual():
-    return generar_reporte('mensual', es_gasto_mes_actual)
-
-
-def guardar_reporte_json(reporte, nombre_archivo):
-    return save_report(reporte, nombre_archivo)
-
-
-def formatear_reporte_texto(reporte):
-    lineas = []
-    lineas.append(f"=== Reporte {reporte['tipo'].upper()} ===")
-    lineas.append(f"Total: ${reporte['total']:.2f}")
-    lineas.append(f"Cantidad de gastos: {reporte.get('cantidad_gastos', 0)}")
-    lineas.append("\nPor categoría:")
+def generarReporteSemanal(gastos):
+    hoy = datetime.now()
+    hace7 = (hoy - timedelta(days=7)).replace(hour=0, minute=0, second=0, microsecond=0)
     
-    if reporte['por_categoria']:
-        for cat, monto in sorted(reporte['por_categoria'].items()):
-            porcentaje = (monto / reporte['total'] * 100) if reporte['total'] > 0 else 0
-            lineas.append(f"  - {cat.capitalize()}: ${monto:.2f} ({porcentaje:.1f}%)")
-    else:
-        lineas.append("  No hay gastos en este período")
+    gastos_semana = [
+        g for g in gastos
+        if hace7 <= datetime.strptime(g["fecha"], "%Y-%m-%d") <= hoy
+    ]
     
-    return '\n'.join(lineas)
+    return {
+        "periodo": "Semanal",
+        "fecha_inicio": hace7.strftime("%Y-%m-%d"),
+        "fecha_fin": hoy.strftime("%Y-%m-%d"),
+        "gastos": gastos_semana,
+        "total": totalSemanal(gastos),
+        "por_categoria": agruparPorCategoria(gastos_semana)
+    }
+
+def generarReporteMensual(gastos):
+    hoy = datetime.now()
+    
+    gastos_mes = [
+        g for g in gastos
+        if datetime.strptime(g["fecha"], "%Y-%m-%d").month == hoy.month
+        and datetime.strptime(g["fecha"], "%Y-%m-%d").year == hoy.year
+    ]
+    
+    return {
+        "periodo": "Mensual",
+        "mes": hoy.strftime("%B %Y"),
+        "gastos": gastos_mes,
+        "total": totalMensual(gastos),
+        "por_categoria": agruparPorCategoria(gastos_mes)
+    }
+
+def agruparPorCategoria(gastos):
+    categorias = defaultdict(float)
+    for gasto in gastos:
+        categorias[gasto["categoria"]] += gasto["cantidad"]
+    return dict(categorias)

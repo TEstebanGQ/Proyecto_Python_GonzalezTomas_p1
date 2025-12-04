@@ -1,105 +1,110 @@
+from ui.prompts import inputSeguro, confirmarAccion
 from utils.screenControllers import limpiarPantalla, pausarPantalla
-from utils.formatting import print_success, print_error
-from core.reportes import ( reporte_diario, reporte_semanal, reporte_mensual, guardar_reporte_json, formatear_reporte_texto)
-from ui.menuSystem import Menu
+from core.storage import loadData
+from core.reportes import (generarReporteDiario, generarReporteSemanal, generarReporteMensual)
+from tabulate import tabulate
+import json
+from datetime import datetime
 
-def mostrar_reporte_pantalla(reporte):
+def generarReporteMenu():
+    data = loadData()
+    gastos = data["gastos"]
+
+    while True:
+        limpiarPantalla()
+        print("""
+=============================================
+           Generar Reporte de Gastos
+=============================================
+Seleccione el tipo de reporte:
+
+1. Reporte diario
+2. Reporte semanal
+3. Reporte mensual
+4. Regresar al menú principal
+=============================================
+""")
+        opcion = inputSeguro("Seleccione una opción: ")
+        reporte = None
+        if opcion == "1":
+            reporte = generarReporteDiario(gastos)
+        elif opcion == "2":
+            reporte = generarReporteSemanal(gastos)
+        elif opcion == "3":
+            reporte = generarReporteMensual(gastos)
+        elif opcion == "4":
+            break
+        else:
+            print(" Opción inválida.")
+            pausarPantalla()
+            continue
+
+        if reporte:
+            mostrarReporte(reporte)
+
+def mostrarReporte(reporte):
     limpiarPantalla()
     print(f"""
 =============================================
-         Reporte {reporte['tipo'].capitalize()}
+         Reporte {reporte['periodo']}
 =============================================
 """)
     
-    # Usar el formateador centralizado
-    texto_reporte = formatear_reporte_texto(reporte)
-    print(texto_reporte)
+    mostrarEncabezadoReporte(reporte)
+    mostrarGastosReporte(reporte)
+    mostrarResumenCategoriasReporte(reporte)
+    mostrarTotalReporte(reporte)
     
-    print("\n" + "="*45)
+    # Usar la nueva función confirmarAccion
+    if confirmarAccion("\n¿Desea guardar este reporte en un archivo JSON? (S/N): "):
+        guardarReporte(reporte)
+    
     pausarPantalla()
 
+def mostrarEncabezadoReporte(reporte):
+    if reporte["periodo"] == "Diario":
+        print(f"Fecha: {reporte['fecha']}")
+    elif reporte["periodo"] == "Semanal":
+        print(f"Período: {reporte['fecha_inicio']} a {reporte['fecha_fin']}")
+    else:
+        print(f"Mes: {reporte['mes']}")
 
-def guardar_reporte_archivo(reporte, nombre_archivo):
-    limpiarPantalla()
-    print("""
-=============================================
-         Guardar Reporte
-=============================================
-""")
+def mostrarGastosReporte(reporte):
+    print("\n--- Gastos Registrados ---")
+    
+    if not reporte["gastos"]:
+        print(" No hay gastos registrados en este período.")
+    else:
+        tabla = [
+            [g["id"], g["fecha"], g["categoria"].capitalize(), 
+             f"${g['cantidad']:.2f}", g["descripcion"]]
+            for g in reporte["gastos"]
+        ]
+        print(tabulate(tabla, 
+                      headers=["ID", "Fecha", "Categoría", "Monto", "Descripción"],
+                      tablefmt="grid"))
+
+def mostrarResumenCategoriasReporte(reporte):
+    print("\n--- Resumen por Categoría ---")
+    if reporte["por_categoria"]:
+        tabla_cat = [
+            [cat.capitalize(), f"${monto:.2f}"]
+            for cat, monto in reporte["por_categoria"].items()
+        ]
+        print(tabulate(tabla_cat, 
+                      headers=["Categoría", "Total"],
+                      tablefmt="grid"))
+
+def mostrarTotalReporte(reporte):
+    print(f"\n✓ TOTAL {reporte['periodo'].upper()}: ${reporte['total']:.2f}")
+
+def guardarReporte(reporte):
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    nombre_archivo = f"data/reporte_{reporte['periodo'].lower()}_{timestamp}.json"
     
     try:
-        ruta = guardar_reporte_json(reporte, nombre_archivo)
-        print_success("¡Reporte guardado exitosamente!")
-        print(f"\nUbicación: {ruta}")
-        print(f"Tipo: {reporte['tipo'].capitalize()}")
-        print(f"Total: ${reporte['total']:.2f}")
-        print("="*45)
+        with open(nombre_archivo, "w", encoding="utf-8") as f:
+            json.dump(reporte, f, indent=4, ensure_ascii=False)
+        print(f" Reporte guardado exitosamente en: {nombre_archivo}")
     except Exception as e:
-        print_error(f"Error al guardar el reporte: {str(e)}")
-    
-    pausarPantalla()
-
-
-def crear_submenu_reporte(nombre_tipo, nombre_archivo, funcion_reporte):
-    def submenu():
-        try:
-            # Generar el reporte una sola vez
-            reporte = funcion_reporte()
-            
-            opciones = [
-                {
-                    'texto': 'Mostrar en pantalla',
-                    'accion': lambda: mostrar_reporte_pantalla(reporte)
-                },
-                {
-                    'texto': 'Guardar como JSON',
-                    'accion': lambda: guardar_reporte_archivo(reporte, nombre_archivo)
-                },
-                {
-                    'texto': 'Regresar',
-                    'accion': lambda: False
-                }
-            ]
-            
-            menu = Menu(f"Reporte {nombre_tipo}", opciones)
-            menu.mostrar()
-            
-        except Exception as e:
-            limpiarPantalla()
-            print_error(f"Error al generar el reporte: {str(e)}")
-            pausarPantalla()
-    
-    return submenu
-
-
-# Crear las vistas específicas usando el generador
-vista_reporte_diario = crear_submenu_reporte(
-    "Diario",
-    "reporte_diario",
-    reporte_diario
-)
-
-vista_reporte_semanal = crear_submenu_reporte(
-    "Semanal",
-    "reporte_semanal",
-    reporte_semanal
-)
-
-vista_reporte_mensual = crear_submenu_reporte(
-    "Mensual",
-    "reporte_mensual",
-    reporte_mensual
-)
-
-
-def menu_reportes():
-    """Menú principal para generar reportes"""
-    opciones = [
-        {'texto': 'Reporte diario', 'accion': vista_reporte_diario},
-        {'texto': 'Reporte semanal', 'accion': vista_reporte_semanal},
-        {'texto': 'Reporte mensual', 'accion': vista_reporte_mensual},
-        {'texto': 'Regresar al menú principal', 'accion': lambda: False}
-    ]
-    
-    menu = Menu("Generar Reporte de Gastos", opciones)
-    menu.mostrar()
+        print(f" Error al guardar el reporte: {e}")

@@ -1,17 +1,11 @@
-from ui.menus import menu_principal
-from utils.storage import ensure_data_file
-from utils.screenControllers import limpiarPantalla
+from ui.menus import menuPrincipal
+import sys
 
-def main():
-    ensure_data_file()
+if __name__ == "__main__":
     try:
-        while True:
-            limpiarPantalla()
-            menu_principal()
+        menuPrincipal()
+    except KeyboardInterrupt:
+        print("\nPrograma interrumpido por el usuario.")
+        sys.exit(0)
     except Exception as e:
-        print("Ocurrió un error inesperado:", str(e))
-        print("Reiniciando el menú principal...")
-        main()
-
-if __name__ == '__main__':
-    main()
+        print(f"\nError inesperado: {e}")

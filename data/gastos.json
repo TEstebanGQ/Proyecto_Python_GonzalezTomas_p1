@@ -1,0 +1,29 @@
+{
+    "gastos": [
+        {
+            "id": "00001",
+            "fecha": "2025-05-03",
+            "categoria": "comida",
+            "cantidad": 80000.0,
+            "descripcion": "pizza"
+        },
+        {
+            "id": "00002",
+            "fecha": "2025-03-23",
+            "categoria": "comida",
+            "cantidad": 85555.0,
+            "descripcion": "hamburguesa"
+        },
+        {
+            "id": "00003",
+            "fecha": "2025-12-01",
+            "categoria": "entretenimiento",
+            "cantidad": 85000.0,
+            "descripcion": "cine"
+        }
+    ],
+    "categorias": [
+        "comida",
+        "entretenimiento"
+    ]
+}

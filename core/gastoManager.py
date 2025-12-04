@@ -1,56 +1,107 @@
-import uuid
-from utils.storage import load_data, save_data
-from utils.dateUtils import ahora_iso
-from core.validators import validar_monto, corregir_categoria
+from ui.prompts import inputSeguro, confirmarAccion
+from utils.validators import validarFecha, validarCantidad
+from utils.screenControllers import pausarPantalla, limpiarPantalla
+from core.storage import *
 
+def seleccionarCategoria(data):
+    limpiarPantalla()
+    print("""
+=============================================
+         Seleccionar Categoría
+=============================================
+""")
+    
+    categorias = data["categorias"]
+    
+    if categorias:
+        print("\nCategorías disponibles:")
+        for idx, cat in enumerate(categorias, start=1):
+            print(f"  {idx}. {cat.capitalize()}")
+        print(f"  {len(categorias) + 1}. Crear nueva categoría")
+        
+        while True:
+            opcion = inputSeguro("\nSeleccione una opción: ")
+            if not opcion:
+                return None
+            
+            try:
+                opcionNum = int(opcion)
+                
+                if 1 <= opcionNum <= len(categorias):
+                    return categorias[opcionNum - 1]
+                
+                elif opcionNum == len(categorias) + 1:
+                    nuevaCat = inputSeguro("\nIngrese el nombre de la nueva categoría: ")
+                    if nuevaCat:
+                        nuevaCat = nuevaCat.lower()
+                        if nuevaCat not in categorias:
+                            data["categorias"].append(nuevaCat)
+                            print(f" Nueva categoría '{nuevaCat}' creada.")
+                        return nuevaCat
+                    else:
+                        print(" El nombre de la categoría no puede estar vacío.")
+                        return None
+                else:
+                    print(" Opción inválida. Intente de nuevo.")
+            
+            except ValueError:
+                print(" Por favor ingrese un número válido.")
+    else:
+        print("\n No hay categorías registradas aún.")
+        nuevaCat = inputSeguro("Ingrese el nombre de la nueva categoría: ")
+        if nuevaCat:
+            nuevaCat = nuevaCat.lower()
+            data["categorias"].append(nuevaCat)
+            return nuevaCat
+        return None
 
-def generar_id():
-    return str(uuid.uuid4())
+def registrarGasto():
+    limpiarPantalla()
+    print("""
+=============================================
+            Registrar Nuevo Gasto
+=============================================
+""")
 
+    data = loadData()
 
-def crear_gasto(monto, categoria, descripcion=''):
-    return {
-        'id': generar_id(),
-        'fecha': ahora_iso(),
-        'monto': monto,
-        'categoria': categoria,
-        'descripcion': descripcion.strip()
+    fecha = inputSeguro("Fecha (YYYY-MM-DD): ")
+    if not fecha or not validarFecha(fecha):
+        print(" Fecha inválida.")
+        return pausarPantalla()
+
+    cantidad = inputSeguro("Monto: ")
+    if not cantidad or not validarCantidad(cantidad):
+        print(" Monto inválido.")
+        return pausarPantalla()
+
+    # Usar la nueva función de selección de categorías
+    categoria = seleccionarCategoria(data)
+    if not categoria:
+        print(" Categoría inválida.")
+        return pausarPantalla()
+
+    descripcion = inputSeguro("Descripción (opcional): ")
+    if descripcion is None:
+        descripcion = ""
+
+    # Usar la nueva función confirmarAccion
+    if not confirmarAccion("¿Guardar gasto? (S/N): "):
+        print(" Operación cancelada.")
+        return pausarPantalla()
+
+    gastoId = nextId(data)
+
+    gasto = {
+        "id": gastoId,
+        "fecha": fecha,
+        "categoria": categoria,
+        "cantidad": float(cantidad),
+        "descripcion": descripcion
     }
 
+    data["gastos"].append(gasto)
+    saveData(data)
 
-def registrar_gasto(monto_str, categoria_str, descripcion=''):
-    monto = validar_monto(monto_str)
-    if monto is None:
-        raise ValueError('Monto inválido. Debe ser un número positivo.')
-
-    categoria = corregir_categoria(categoria_str)
-    if categoria is None:
-        raise ValueError('Categoría inválida. Debe contener solo letras, números y espacios.')
- 
-    gasto = crear_gasto(monto, categoria, descripcion)
-    data = load_data()
-    data.append(gasto)
-    save_data(data)
-    
-    return gasto
-
-
-def listar_gastos(filtro=None):
-    data = load_data()
-    
-    if filtro is None:
-        return data
-    
-    return [gasto for gasto in data if filtro(gasto)]
-
-def buscar_gasto_por_id(gasto_id):
-    gastos = load_data()
-    
-    for gasto in gastos:
-        if str(gasto['id']) == str(gasto_id):
-            return gasto
-    
-    return None
-
-def contar_gastos(filtro=None):
-    return len(listar_gastos(filtro))
+    print(" Gasto registrado correctamente.")
+    pausarPantalla()

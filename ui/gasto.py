@@ -17,7 +17,7 @@ def seleccionar_categoria():
         for i, cat in enumerate(categorias_existentes, 1):
             print(f"  {i}. {cat.capitalize()}")
         print(f"  {len(categorias_existentes) + 1}. Crear nueva categoría")
-        
+        interfaz
         while True:
             opcion = input("\nSeleccione una opción: ").strip()
             
@@ -38,10 +38,10 @@ def seleccionar_categoria():
                     return
             
             except ValueError:
-                print("Por favor ingrese un número válido.")
+                print("Por favor ingrese un número válunaido.")
     else:
         limpiarPantalla()
-        print("\nNo hay categorías registradas aún.")
+        print("\nNo hay categorías registradas aún, rdegistre .")
         nueva_cat = input("Ingrese el nombre de la nueva categoría: ").strip().lower()
         if nueva_cat:
             return nueva_cat

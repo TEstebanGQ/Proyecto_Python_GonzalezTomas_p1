@@ -4,11 +4,12 @@ from core.storage import loadData
 from core.reportes import totalDiario, totalSemanal, totalMensual
 
 def calcularTotalesMenu():
-    data = loadData()
-    gastos = data["gastos"]
+    while True:
+        data = loadData()
+        gastos = data["gastos"]
 
-    limpiarPantalla()
-    print("""
+        limpiarPantalla()
+        print("""
 =============================================
           Calcular Total de Gastos
 =============================================
@@ -21,20 +22,22 @@ Seleccione el periodo de cálculo:
 =============================================
 """)
 
-    opcion = inputSeguro("Seleccione una opción: ")
+        opcion = inputSeguro("Seleccione una opción: ")
 
-    if opcion == "1":
-        calcularTotalDiario(gastos)
-    elif opcion == "2":
-        calcularTotalSemanal(gastos)
-    elif opcion == "3":
-        calcularTotalMensual(gastos)
-    elif opcion == "4":
-        return
-    else:
-        print("Opción inválida.")
-    
-    pausarPantalla()
+        if opcion == "1":
+            calcularTotalDiario(gastos)
+            pausarPantalla()
+        elif opcion == "2":
+            calcularTotalSemanal(gastos)
+            pausarPantalla()
+        elif opcion == "3":
+            calcularTotalMensual(gastos)
+            pausarPantalla()
+        elif opcion == "4":
+            break
+        else:
+            print(" Opción inválida.")
+            pausarPantalla()
 
 def calcularTotalDiario(gastos):
     total = totalDiario(gastos)

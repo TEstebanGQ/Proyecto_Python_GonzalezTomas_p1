@@ -7,10 +7,10 @@ import json
 from datetime import datetime
 
 def generarReporteMenu():
-    data = loadData()
-    gastos = data["gastos"]
-
     while True:
+        data = loadData()
+        gastos = data["gastos"]
+
         limpiarPantalla()
         print("""
 =============================================
@@ -26,6 +26,7 @@ Seleccione el tipo de reporte:
 """)
         opcion = inputSeguro("Seleccione una opción: ")
         reporte = None
+        
         if opcion == "1":
             reporte = generarReporteDiario(gastos)
         elif opcion == "2":
@@ -54,8 +55,6 @@ def mostrarReporte(reporte):
     mostrarGastosReporte(reporte)
     mostrarResumenCategoriasReporte(reporte)
     mostrarTotalReporte(reporte)
-    
-    # Usar la nueva función confirmarAccion
     if confirmarAccion("\n¿Desea guardar este reporte en un archivo JSON? (S/N): "):
         guardarReporte(reporte)
     

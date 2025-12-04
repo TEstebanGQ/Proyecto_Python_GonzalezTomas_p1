@@ -3,16 +3,26 @@ from datetime import datetime
 
 def validarFecha(fecha_str):
     try:
-        datetime.strptime(fecha_str, "%Y-%m-%d")
+        fecha = datetime.strptime(fecha_str, "%Y-%m-%d")
+        hoy = datetime.now()
+        if fecha > hoy:
+            print(" Error: La fecha no puede ser mayor a la fecha actual.")
+            return False
+        
         return True
     except ValueError:
+        print(" Error: Formato de fecha inválido. Use YYYY-MM-DD.")
         return False
 
 def validarCantidad(cantidad_str):
     try:
         cantidad = float(cantidad_str)
-        return cantidad > 0
+        if cantidad <= 0:
+            print(" Error: La cantidad debe ser mayor a 0.")
+            return False
+        return True
     except:
+        print(" Error: Cantidad inválida. Ingrese un número válido.")
         return False
 
 def validarCategoria(categoria, categorias_validas):

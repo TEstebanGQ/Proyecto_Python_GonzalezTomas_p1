@@ -4,7 +4,6 @@ from utils.screenControllers import pausarPantalla, limpiarPantalla
 from core.storage import *
 
 def seleccionarCategoria(data):
-    limpiarPantalla()
     print("""
 =============================================
          Seleccionar Categoría
@@ -56,52 +55,63 @@ def seleccionarCategoria(data):
         return None
 
 def registrarGasto():
-    limpiarPantalla()
-    print("""
+    while True:
+        limpiarPantalla()
+        print("""
 =============================================
             Registrar Nuevo Gasto
 =============================================
 """)
 
-    data = loadData()
+        data = loadData()
+        while True:
+            fecha = inputSeguro("Fecha (YYYY-MM-DD): ")
+            if not fecha:
+                print(" Operación cancelada.")
+                pausarPantalla()
+                return
+            if validarFecha(fecha):
+                break
 
-    fecha = inputSeguro("Fecha (YYYY-MM-DD): ")
-    if not fecha or not validarFecha(fecha):
-        print(" Fecha inválida.")
-        return pausarPantalla()
+        while True:
+            cantidad = inputSeguro("Monto: ")
+            if not cantidad:
+                print(" Operación cancelada.")
+                pausarPantalla()
+                return
+            if validarCantidad(cantidad):
+                break
 
-    cantidad = inputSeguro("Monto: ")
-    if not cantidad or not validarCantidad(cantidad):
-        print(" Monto inválido.")
-        return pausarPantalla()
+        categoria = seleccionarCategoria(data)
+        if not categoria:
+            print(" Categoría inválida.")
+            pausarPantalla()
+            continue
 
-    # Usar la nueva función de selección de categorías
-    categoria = seleccionarCategoria(data)
-    if not categoria:
-        print(" Categoría inválida.")
-        return pausarPantalla()
+        descripcion = inputSeguro("Descripción (opcional): ")
+        if descripcion is None:
+            descripcion = ""
 
-    descripcion = inputSeguro("Descripción (opcional): ")
-    if descripcion is None:
-        descripcion = ""
+        if not confirmarAccion("¿Guardar gasto? (S/N): "):
+            print(" Operación cancelada.")
+            pausarPantalla()
+            continue
 
-    # Usar la nueva función confirmarAccion
-    if not confirmarAccion("¿Guardar gasto? (S/N): "):
-        print(" Operación cancelada.")
-        return pausarPantalla()
+        gastoId = nextId(data)
 
-    gastoId = nextId(data)
+        gasto = {
+            "id": gastoId,
+            "fecha": fecha,
+            "categoria": categoria,
+            "cantidad": float(cantidad),
+            "descripcion": descripcion
+        }
 
-    gasto = {
-        "id": gastoId,
-        "fecha": fecha,
-        "categoria": categoria,
-        "cantidad": float(cantidad),
-        "descripcion": descripcion
-    }
+        data["gastos"].append(gasto)
+        saveData(data)
 
-    data["gastos"].append(gasto)
-    saveData(data)
-
-    print(" Gasto registrado correctamente.")
+        print(" Gasto registrado correctamente.")
+        if not confirmarAccion("\n¿Desea registrar otro gasto? (S/N): "):
+            break
+        
     pausarPantalla()

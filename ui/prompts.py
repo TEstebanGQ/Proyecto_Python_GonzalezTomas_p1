@@ -1,5 +1,3 @@
-from core.gastoManager import *
-
 def inputSeguro(mensaje):
     try:
         valor = input(mensaje).strip()

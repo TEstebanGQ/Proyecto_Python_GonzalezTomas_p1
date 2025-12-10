@@ -1,0 +1,17 @@
+{
+    "periodo": "Diario",
+    "fecha": "2025-12-10",
+    "gastos": [
+        {
+            "id": "00005",
+            "fecha": "2025-12-10",
+            "categoria": "estudio",
+            "cantidad": 70000.0,
+            "descripcion": "Campus"
+        }
+    ],
+    "total": 70000.0,
+    "por_categoria": {
+        "estudio": 70000.0
+    }
+}

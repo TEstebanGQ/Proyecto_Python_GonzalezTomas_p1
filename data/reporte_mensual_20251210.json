@@ -1,0 +1,32 @@
+{
+    "periodo": "Mensual",
+    "mes": "December 2025",
+    "gastos": [
+        {
+            "id": "00003",
+            "fecha": "2025-12-01",
+            "categoria": "entretenimiento",
+            "cantidad": 85000.0,
+            "descripcion": "cine"
+        },
+        {
+            "id": "00005",
+            "fecha": "2025-12-10",
+            "categoria": "estudio",
+            "cantidad": 70000.0,
+            "descripcion": "Campus"
+        },
+        {
+            "id": "00006",
+            "fecha": "2025-12-06",
+            "categoria": "estudio",
+            "cantidad": 70000.0,
+            "descripcion": "Campus"
+        }
+    ],
+    "total": 225000.0,
+    "por_categoria": {
+        "entretenimiento": 85000.0,
+        "estudio": 140000.0
+    }
+}

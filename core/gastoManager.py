@@ -4,6 +4,7 @@ from utils.screenControllers import pausarPantalla, limpiarPantalla
 from core.storage import *
 
 def seleccionarCategoria(data):
+    limpiarPantalla()
     print("""
 =============================================
          Seleccionar Categoría

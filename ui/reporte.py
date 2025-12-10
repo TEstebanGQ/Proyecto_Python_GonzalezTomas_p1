@@ -90,10 +90,10 @@ def mostrarResumenCategoriasReporte(reporte):
                       tablefmt="grid"))
 
 def mostrarTotalReporte(reporte):
-    print(f"\n✓ TOTAL {reporte['periodo'].upper()}: ${reporte['total']:.2f}")
+    print(f"\n TOTAL {reporte['periodo'].upper()}: ${reporte['total']:.2f}")
 
 def guardarReporte(reporte):
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now().strftime("%Y%m%d")
     nombre_archivo = f"data/reporte_{reporte['periodo'].lower()}_{timestamp}.json"
     
     try:

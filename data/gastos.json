@@ -20,10 +20,32 @@
             "categoria": "entretenimiento",
             "cantidad": 85000.0,
             "descripcion": "cine"
+        },
+        {
+            "id": "00004",
+            "fecha": "2025-11-12",
+            "categoria": "comida",
+            "cantidad": 30000.0,
+            "descripcion": "Hamburguesa"
+        },
+        {
+            "id": "00005",
+            "fecha": "2025-12-10",
+            "categoria": "estudio",
+            "cantidad": 70000.0,
+            "descripcion": "Campus"
+        },
+        {
+            "id": "00006",
+            "fecha": "2025-12-06",
+            "categoria": "estudio",
+            "cantidad": 70000.0,
+            "descripcion": "Campus"
         }
     ],
     "categorias": [
         "comida",
-        "entretenimiento"
+        "entretenimiento",
+        "estudio"
     ]
 }

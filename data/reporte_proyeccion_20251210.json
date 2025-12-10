@@ -1,0 +1,25 @@
+{
+    "proyeccion": {
+        "dias_proyectados": 63,
+        "gasto_total_proyectado": 4016250.0,
+        "gasto_por_categoria": {
+            "entretenimiento": 1338750.0,
+            "comida": 472500.0,
+            "estudio": 2205000.0
+        },
+        "categorias_ordenadas": [
+            {
+                "categoria": "estudio",
+                "monto_proyectado": 2205000.0
+            },
+            {
+                "categoria": "entretenimiento",
+                "monto_proyectado": 1338750.0
+            },
+            {
+                "categoria": "comida",
+                "monto_proyectado": 472500.0
+            }
+        ]
+    }
+}

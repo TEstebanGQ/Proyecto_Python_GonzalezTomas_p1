@@ -1,5 +1,6 @@
-from ui.prompts import inputSeguro, confirmarAccion
+from ui.prompts import confirmarAccion
 from utils.screenControllers import limpiarPantalla, pausarPantalla
+from utils.menu import menu
 from core.storage import loadData
 from core.reportes import (generarReporteDiario, generarReporteSemanal, generarReporteMensual)
 from tabulate import tabulate
@@ -7,38 +8,31 @@ import json
 from datetime import datetime
 
 def generarReporteMenu():
+    opciones = (
+        "Reporte diario",
+        "Reporte semanal",
+        "Reporte mensual",
+        "Regresar al menú principal"
+    )
+    
     while True:
         data = loadData()
         gastos = data["gastos"]
 
         limpiarPantalla()
-        print("""
-=============================================
-           Generar Reporte de Gastos
-=============================================
-Seleccione el tipo de reporte:
-
-1. Reporte diario
-2. Reporte semanal
-3. Reporte mensual
-4. Regresar al menú principal
-=============================================
-""")
-        opcion = inputSeguro("Seleccione una opción: ")
+        opcion = menu("Generar Reporte de Gastos", opciones)
+        
         reporte = None
         
-        if opcion == "1":
-            reporte = generarReporteDiario(gastos)
-        elif opcion == "2":
-            reporte = generarReporteSemanal(gastos)
-        elif opcion == "3":
-            reporte = generarReporteMensual(gastos)
-        elif opcion == "4":
-            break
-        else:
-            print(" Opción inválida.")
-            pausarPantalla()
-            continue
+        match opcion:
+            case 1:
+                reporte = generarReporteDiario(gastos)
+            case 2:
+                reporte = generarReporteSemanal(gastos)
+            case 3:
+                reporte = generarReporteMensual(gastos)
+            case 4:
+                break
 
         if reporte:
             mostrarReporte(reporte)
@@ -55,6 +49,7 @@ def mostrarReporte(reporte):
     mostrarGastosReporte(reporte)
     mostrarResumenCategoriasReporte(reporte)
     mostrarTotalReporte(reporte)
+    
     if confirmarAccion("\n¿Desea guardar este reporte en un archivo JSON? (S/N): "):
         guardarReporte(reporte)
     

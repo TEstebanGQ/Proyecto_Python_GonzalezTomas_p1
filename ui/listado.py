@@ -1,45 +1,35 @@
 from ui.prompts import inputSeguro
 from utils.screenControllers import limpiarPantalla, pausarPantalla
+from utils.menu import menu
 from core.storage import loadData
 from core.filtros import filtrarCategoria, filtrarRangoFechas
 from utils.validators import validarFecha
 from tabulate import tabulate
 
 def listarGastosMenu():
+    opciones = (
+        "Ver todos los gastos",
+        "Filtrar por categoría",
+        "Filtrar por rango de fechas",
+        "Regresar al menú principal"
+    )
+    
     data = loadData()
     gastos = data["gastos"]
 
     while True:
         limpiarPantalla()
-        print("""
-=============================================
-                Listar Gastos
-=============================================
-Seleccione una opción para filtrar los gastos:
-
-1. Ver todos los gastos
-2. Filtrar por categoría
-3. Filtrar por rango de fechas
-4. Regresar al menú principal
-=============================================
-""")
-
-        opcion = inputSeguro("Seleccione una opción: ")
-
-        if opcion == "1":
-            mostrarTabla(gastos)
-
-        elif opcion == "2":
-            filtrarPorCategoriaUI(data, gastos)
-
-        elif opcion == "3":
-            filtrarPorFechasUI(gastos)
-
-        elif opcion == "4":
-            break
-        else:
-            print(" Opción inválida.")
-            pausarPantalla()
+        opcion = menu("Listar Gastos", opciones)
+        
+        match opcion:
+            case 1:
+                mostrarTabla(gastos)
+            case 2:
+                filtrarPorCategoriaUI(data, gastos)
+            case 3:
+                filtrarPorFechasUI(gastos)
+            case 4:
+                break
 
 def filtrarPorCategoriaUI(data, gastos):
     limpiarPantalla()

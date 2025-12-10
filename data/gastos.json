@@ -20,6 +20,13 @@
             "categoria": "entretenimiento",
             "cantidad": 85000.0,
             "descripcion": "cine"
+        },
+        {
+            "id": "00004",
+            "fecha": "2025-12-06",
+            "categoria": "entretenimiento",
+            "cantidad": 30000.0,
+            "descripcion": "Se juega Arcadia"
         }
     ],
     "categorias": [

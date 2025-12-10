@@ -1,43 +1,35 @@
-from ui.prompts import inputSeguro
 from utils.screenControllers import limpiarPantalla, pausarPantalla
+from utils.menu import menu
 from core.storage import loadData
 from core.reportes import totalDiario, totalSemanal, totalMensual
 
 def calcularTotalesMenu():
+    opciones = (
+        "Calcular total diario",
+        "Calcular total semanal",
+        "Calcular total mensual",
+        "Regresar al menú principal"
+    )
+    
     while True:
         data = loadData()
         gastos = data["gastos"]
 
         limpiarPantalla()
-        print("""
-=============================================
-          Calcular Total de Gastos
-=============================================
-Seleccione el periodo de cálculo:
-
-1. Calcular total diario
-2. Calcular total semanal
-3. Calcular total mensual
-4. Regresar al menú principal
-=============================================
-""")
-
-        opcion = inputSeguro("Seleccione una opción: ")
-
-        if opcion == "1":
-            calcularTotalDiario(gastos)
-            pausarPantalla()
-        elif opcion == "2":
-            calcularTotalSemanal(gastos)
-            pausarPantalla()
-        elif opcion == "3":
-            calcularTotalMensual(gastos)
-            pausarPantalla()
-        elif opcion == "4":
-            break
-        else:
-            print(" Opción inválida.")
-            pausarPantalla()
+        opcion = menu("Calcular Total de Gastos", opciones)
+        
+        match opcion:
+            case 1:
+                calcularTotalDiario(gastos)
+                pausarPantalla()
+            case 2:
+                calcularTotalSemanal(gastos)
+                pausarPantalla()
+            case 3:
+                calcularTotalMensual(gastos)
+                pausarPantalla()
+            case 4:
+                break
 
 def calcularTotalDiario(gastos):
     total = totalDiario(gastos)
